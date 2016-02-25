@@ -13,6 +13,9 @@
 
 using namespace v8;
 
+#define DUMMY_SNAPLENGTH                65535
+#define DUMMY_NETMASK                   0xFF000000
+
 // Helper method, convert a sockaddr* (AF_INET or AF_INET6) to a string, and set it as the property
 // named 'key' in the Address object you pass in.
 void SetAddrStringHelper(const char* key, sockaddr *addr, Local<Object> Address){
@@ -133,6 +136,18 @@ NAN_METHOD(LibVersion)
     info.GetReturnValue().Set(Nan::New(pcap_lib_version()).ToLocalChecked());
 }
 
+NAN_METHOD(CheckFilterSyntax)
+{
+    Nan::HandleScope scope;
+
+    struct bpf_program bpf;
+
+    v8::String::Utf8Value filter(info[0]->ToString());
+
+    info.GetReturnValue().Set(Nan::New(pcap_compile_nopcap(DUMMY_SNAPLENGTH, 0, &bpf, *filter, 1, DUMMY_NETMASK)));
+}
+
+
 void Initialize(Handle<Object> exports)
 {
     Nan::HandleScope scope;
@@ -142,6 +157,7 @@ void Initialize(Handle<Object> exports)
     exports->Set(Nan::New("findalldevs").ToLocalChecked(), Nan::New<FunctionTemplate>(FindAllDevs)->GetFunction());
     exports->Set(Nan::New("default_device").ToLocalChecked(), Nan::New<FunctionTemplate>(DefaultDevice)->GetFunction());
     exports->Set(Nan::New("lib_version").ToLocalChecked(), Nan::New<FunctionTemplate>(LibVersion)->GetFunction());
+    exports->Set(Nan::New("check_filter_syntax").ToLocalChecked(), Nan::New<FunctionTemplate>(CheckFilterSyntax)->GetFunction());
 }
 
 NODE_MODULE(pcap_binding, Initialize)

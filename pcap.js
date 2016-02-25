@@ -88,6 +88,10 @@ exports.findalldevs = function () {
     return binding.findalldevs();
 };
 
+exports.checkFilterSyntax = function (filter) {
+    return binding.check_filter_syntax(filter);
+}
+
 function PacketWithHeader(buf, header, link_type) {
     this.buf = buf;
     this.header = header;
