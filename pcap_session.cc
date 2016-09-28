@@ -25,6 +25,7 @@ void PcapSession::Init(Handle<Object> exports) {
   Nan::SetPrototypeMethod(tpl, "open_offline", OpenOffline);
   Nan::SetPrototypeMethod(tpl, "dispatch", Dispatch);
   Nan::SetPrototypeMethod(tpl, "fileno", Fileno);
+  Nan::SetPrototypeMethod(tpl, "stop", Stop);
   Nan::SetPrototypeMethod(tpl, "close", Close);
   Nan::SetPrototypeMethod(tpl, "stats", Stats);
   Nan::SetPrototypeMethod(tpl, "inject", Inject);
@@ -300,6 +301,15 @@ void PcapSession::OpenLive(const Nan::FunctionCallbackInfo<Value>& info)
 void PcapSession::OpenOffline(const Nan::FunctionCallbackInfo<Value>& info)
 {
     return Open(false, info);
+}
+
+void PcapSession::Stop(const Nan::FunctionCallbackInfo<Value>& info)
+{
+    Nan::HandleScope scope;
+
+    PcapSession* session = Nan::ObjectWrap::Unwrap<PcapSession>(info.Holder());
+
+    pcap_breakloop(session->pcap_handle);
 }
 
 void PcapSession::Close(const Nan::FunctionCallbackInfo<Value>& info)

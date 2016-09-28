@@ -73,6 +73,10 @@ function PcapSession(is_live, device_name, filter, buffer_size, outfile, is_moni
             var packets = 0;
             do {
                 packets = self.session.dispatch(self.buf, self.header);
+                if (!this.opened) {
+                    self.session.close();
+                    break;
+                }
             } while ( packets > 0 );
             self.emit("complete");
         });
@@ -105,7 +109,7 @@ PcapSession.prototype.on_packet_ready = function () {
 
 PcapSession.prototype.close = function () {
     this.opened = false;
-    this.session.close();
+    this.session.stop();
     if (this.is_live) {
         this.readWatcher.stop();
     }

@@ -18,6 +18,7 @@ private:
     static void OpenOffline(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void Dispatch(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void Fileno(const Nan::FunctionCallbackInfo<v8::Value>& info);
+    static void Stop(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void Close(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void Stats(const Nan::FunctionCallbackInfo<v8::Value>& info);
     static void Inject(const Nan::FunctionCallbackInfo<v8::Value>& info);
